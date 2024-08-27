@@ -69,8 +69,19 @@ function draw() {
   if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
     dx = -dx;
   }
-  if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
+  if (y + dy < ballRadius) {
     dy = -dy;
+  } else if (y + dy > canvas.height - ballRadius) {
+    // Обнаружение столкновений между шаром и битой
+    if (x > paddleX && x < paddleX + paddleWidth) {
+      dy = -dy;
+    } else {
+      alert("GAME OVER");
+      // Перезагружает ресурс из текущего URL подобно кнопке обновления браузера
+      document.location.reload();
+      // Отменяет регулярное выполнение функции, установленное вызовом setInterval().
+      clearInterval(interval);
+    }
   }
 
   if (isLeftPressed && paddleX > 0) {
@@ -83,4 +94,4 @@ function draw() {
   y += dy;
 }
 
-setInterval(draw, 10);
+const interval = setInterval(draw, 10);
