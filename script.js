@@ -19,6 +19,31 @@ let y = canvas.height - 30;
 const ballRadius = 10;
 let dx = 2;
 let dy = -2;
+const paddleHeight = 10;
+const paddleWidth = 75;
+let paddleX = (canvas.width - paddleWidth) / 2;
+let isLeftPressed = false;
+let isRightPressed = false;
+
+// Позволяем пользователю управлять ракеткой
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+
+function keyDownHandler(e) {
+  if (e.key === "ArrowLeft") {
+    isLeftPressed = true;
+  } else if (e.key === "ArrowRight") {
+    isRightPressed = true;
+  }
+}
+
+function keyUpHandler(e) {
+  if (e.key === "ArrowLeft") {
+    isLeftPressed = false;
+  } else if (e.key === "ArrowRight") {
+    isRightPressed = false;
+  }
+}
 
 function drawBall() {
   ctx.beginPath();
@@ -28,15 +53,30 @@ function drawBall() {
   ctx.closePath();
 }
 
+function drawPaddle() {
+  ctx.beginPath();
+  ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+  ctx.fillStyle = "#0095DD";
+  ctx.fill();
+  ctx.closePath();
+}
+
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawBall();
+  drawPaddle();
 
   if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
     dx = -dx;
   }
   if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
     dy = -dy;
+  }
+
+  if (isLeftPressed && paddleX > 0) {
+    paddleX -= 7;
+  } else if (isRightPressed && paddleX < canvas.width - paddleWidth) {
+    paddleX += 7;
   }
 
   x += dx;
